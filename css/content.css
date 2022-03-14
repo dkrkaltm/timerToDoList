@@ -1,0 +1,30 @@
+.content{
+    height:70%;
+    background-color: red;
+}
+#cList{
+    background-color: green;
+}
+#cWrite{
+    
+}
+.cInfo{
+    display: flex;
+    flex-direction: column;
+    
+}
+.cInfo label{
+    margin-top:15px;
+    margin-bottom: 7px;
+    font-weight:bolder;
+}
+#cInfoSubmit{
+    width:65px;
+    font-weight: bolder;
+    align-self:flex-end;
+    margin-top:10px;
+    margin-right: 30px;
+}
+.cSelects select{
+    height:27px;
+}

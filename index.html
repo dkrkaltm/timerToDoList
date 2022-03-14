@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script defer src="js\main.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <main class="toDoList">
+        <section class="time">
+            <h1 class="hidden" >time</h1>
+            <article class="sLeft"id="timer">
+                <h1 class="hidden" >timer</h1>
+                <span>00:00:00</span>
+            </article>
+            <article class="sRight" id="nowAndNext">
+                <h1 class="hidden" >nextPlan</h1>
+                <dl>
+                    <div id="now">
+                        <dt>현재 과제</dt>
+                        <dd>미미미미</dd>
+                    </div>
+                    <div id="next">
+                        <dt>다음 과제</dt>
+                        <dd>디디디디</dd>
+                    </div>
+                </dl>
+            </article>
+        </section>
+
+        <section class="content">
+            <h1 class="hidden" >content</h1>
+            <article class="sLeft" id="cList">
+                <h1 class="hidden" >cList</h1>
+            </article>
+            <article class="sRight" id="cWrite">
+                <h1 class="hidden" >cWrite</h1>
+                <form action="" method="get">
+                    <header class="cSelects">
+                        <select name="category" id="category">
+                            <option value="category"selected>Category</option>
+                        </select>
+                        <select name="hour" id="hour">
+                            <option value="hour" selected>Hour</option>
+                        </select>
+                        <select name="minute" id="minute">
+                            <option value="minute" selected>Minute</option>
+                        </select>
+                        <select name="second" id="second">
+                            <option value="second" selected>Second</option>
+                        </select>
+                    </header>
+                 <footer class="cInfo">
+                    <label for="cTitle">주제</label>
+                    <input type="text" id="cTitle">
+                    
+                    <label for="cTarget">목표</label>   
+                    <input type="text" id="cTarget">
+                       
+                    <label for="cMemo">방식</label>
+                    <textarea name="cMemo" id="cMemo" cols="30" rows="10"></textarea>
+                    <button id="cInfoSubmit" type="button">등록</button>
+                </footer>
+                </form>
+
+            </article>
+        </section>
+    </main>
+</div>
+</body>
+</html>

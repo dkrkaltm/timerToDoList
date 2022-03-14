@@ -1,0 +1,38 @@
+@import "reset.css";
+@import "time.css";
+@import "content.css";
+
+/* Function */
+.hidden{
+    display: none;
+}
+.sLeft{
+    flex-grow:5;
+    width: 500px;
+}
+.sRight{
+    width:300px;
+    flex-grow:2;
+}
+
+
+
+.container{
+    height:100vh;
+    background-color: gold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.toDoList{
+    background-color: tomato;
+    width:1400px;
+    height:60vh;
+    display: flex;
+    flex-wrap:wrap;
+}
+.toDoList section{
+    display: flex;
+    flex-wrap: wrap;
+    width:100%;
+}

@@ -1,0 +1,22 @@
+
+.time{
+    height: 30%;
+}
+#timer{
+    background-color: yellow;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size:4rem;
+}
+#nowAndNext{
+    background-color: brown;
+   
+}
+#nowAndNext dl {
+    
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
