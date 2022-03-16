@@ -58,12 +58,17 @@ function optionCreate(index,n){
     }
 }
 
+
+
 function listCreate(){
     digit(time);
-
-  
+ 
+    let space =document.createElement("li");
+    
     if(cWriteImf.cCategory =="오늘"){
-        List[0].innerHTML="<ul><li><div><span>"+cWriteImf.cCategory+"</span><span>"+time.hour+":"+time.minute+":"+time.second+"</span></div><h3>"+cWriteImf.cTitle+"</h3></li></ul>" ;
+        space.innerHTML="<div><span>"+cWriteImf.cCategory+"</span>"+" "+"<span>"+time.hour+":"+time.minute+":"+time.second+"</span></div><h3>"+cWriteImf.cTitle+"</h3>" ;
+        List[0].querySelector("ul").append(space);
+
     }else if(cWriteImf.cCategory =="오전"){
 
     }else{
@@ -74,6 +79,7 @@ function listCreate(){
 function write(event){
 event.preventDefault();
 cWriteImf.onCheck = onCheck.checked; // 반복 여부
+
 cWriteImf.cCategory=cSelects[0].options[cSelects[0].selectedIndex].innerText; // 카테고리 값
 cWriteImf.cTitle =cInfo[0].value;
 cWriteImf.cTarget = cInfo[1].value;
@@ -118,4 +124,25 @@ function digit(val){
         val.second = "0"+val.second;
     }
     
+}
+
+var to = document.querySelector("#todayList");
+
+
+
+for(var i=0; i<List.length; i++){
+    click(i);
+}
+console.log(List);
+
+function click(ind){
+
+    List[ind].onclick = function(){
+        var s= 0;
+        let lt = List[ind].querySelectorAll("ul li");
+        for(; s<lt.length; s++){
+            console.log(lt[s]);    
+        }
+        
+    };
 }

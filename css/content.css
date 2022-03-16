@@ -1,22 +1,35 @@
 .content{
     height:70%;
-    background-color: red;
-}
-#cList{
-    background-color: green;
-}
-.ListImf{
-    margin-top:15px;
-    background-color: orange;
-}
-
-#cWrite{
     
 }
+#cList{
+    border: solid 1px white;
+    overflow: scroll;
+    height:500px;
+}
+.ListBox{
+    border:solid 1px black;
+}
+
+.ListImf li{
+    margin-top:15px;
+    background-color: #E3CAA5;
+    border-radius: 10px 10px 10px 10px;
+}
+.ListImf h3{ 
+    text-align: center;
+    font-weight:600;
+    font-size:1.5rem;
+    line-height: 1.5;
+}
+.ListImf span{
+    font-weight: bold;
+}
+
+
 .cInfo{
     display: flex;
     flex-direction: column;
-    
 }
 .cInfo label{
     margin-top:15px;

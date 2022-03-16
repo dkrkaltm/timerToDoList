@@ -7,31 +7,27 @@
     display: none;
 }
 .sLeft{
-    flex-grow:5;
+    flex-grow:3;
     width: 500px;
 }
 .sRight{
     width:300px;
-    flex-grow:2;
+    flex-grow:1;
 }
-
-
-
 .container{
     height:100vh;
-    background-color: gold;
+    background-color: #CEAB93;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 .toDoList{
-    background-color: tomato;
     width:1400px;
     height:60vh;
     display: flex;
     flex-wrap:wrap;
 }
-.toDoList section{
+.time, .content{
     display: flex;
     flex-wrap: wrap;
     width:100%;
