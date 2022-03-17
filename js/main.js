@@ -19,7 +19,8 @@ var List = document.querySelectorAll("#cList section");
 var cInfo = document.querySelectorAll(".cInfo input");
 var cMemo = document.querySelector("#cMemo");
 
-
+//variable
+var i=0;
 
 //object variable
 var cWriteImf={
@@ -40,7 +41,6 @@ var time={
     }
    
 };
-
 
 
 
@@ -66,29 +66,57 @@ function listCreate(){
     let space =document.createElement("li");
     
     if(cWriteImf.cCategory =="오늘"){
-        space.innerHTML="<div><span>"+cWriteImf.cCategory+"</span>"+" "+"<span>"+time.hour+":"+time.minute+":"+time.second+"</span></div><h3>"+cWriteImf.cTitle+"</h3>" ;
+        space.innerHTML="<div><span>"+cWriteImf.onCheck+" "+"</span>"+"<span>"+cWriteImf.cCategory+"</span>"+" "+"<span>"+time.hour+":"+time.minute+":"+time.second+"</span><button type='button'>선택</button></div><h3>"+cWriteImf.cTitle+"</h3>" ;
         List[0].querySelector("ul").append(space);
 
     }else if(cWriteImf.cCategory =="오전"){
-
+        space.innerHTML="<div><span>"+cWriteImf.onCheck+" "+"</span>"+"<span>"+cWriteImf.cCategory+"</span>"+" "+"<span>"+time.hour+":"+time.minute+":"+time.second+"</span><button type='button'>선택</button></div><h3>"+cWriteImf.cTitle+"</h3>" ;
+        List[1].querySelector("ul").append(space);
     }else{
+        space.innerHTML="<div><span>"+cWriteImf.onCheck+" "+"</span>"+"<span>"+cWriteImf.cCategory+"</span>"+" "+"<span>"+time.hour+":"+time.minute+":"+time.second+"</span><button type='button'>선택</button></div><h3>"+cWriteImf.cTitle+"</h3>" ;
+        List[2].querySelector("ul").append(space);
+    }
 
+    var ChoiceBut = document.querySelectorAll(".ListImf button");
+
+
+    for(; i<ChoiceBut.length; i++){
+        idx(ChoiceBut,i);
     }
     
 }
+function idx(ChoiceBut,i){
+    ChoiceBut[i].onclick = function(){
+        alert(i);
+    }
+}
+
+
 function write(event){
-event.preventDefault();
-cWriteImf.onCheck = onCheck.checked; // 반복 여부
+    event.preventDefault();
+    console.log(onCheck.checked);
 
-cWriteImf.cCategory=cSelects[0].options[cSelects[0].selectedIndex].innerText; // 카테고리 값
-cWriteImf.cTitle =cInfo[0].value;
-cWriteImf.cTarget = cInfo[1].value;
-cWriteImf.cMemo= cMemo.value;
+    if(onCheck.checked ==true){
+        cWriteImf.onCheck = "반복"; // 반복 여부
+    }else{
+        cWriteImf.onCheck = "";
+    }
 
-time.hour= cSelects[1].options[cSelects[1].selectedIndex].innerText; //시간 값
-time.minute = cSelects[2].options[cSelects[2].selectedIndex].value;
-time.second = cSelects[3].options[cSelects[3].selectedIndex].innerText;
-listCreate();
+
+    cWriteImf.cCategory=cSelects[0].options[cSelects[0].selectedIndex].innerText; // 카테고리 값
+
+    cWriteImf.cTitle =cInfo[0].value;
+    cWriteImf.cTarget = cInfo[1].value;
+    cWriteImf.cMemo= cMemo.value;
+
+    if(cWriteImf.cCategory =="Category"){
+        cWriteImf.cCategory = "오늘"
+    }
+    time.hour= cSelects[1].options[cSelects[1].selectedIndex].innerText; //시간 값
+    time.minute = cSelects[2].options[cSelects[2].selectedIndex].innerText;
+    time.second = cSelects[3].options[cSelects[3].selectedIndex].innerText;
+
+    listCreate();
 
 }
 //cInfoSubmit click
@@ -113,36 +141,24 @@ var tResult =time.result();
 // },1000)
 // 자릿수에 따라 0채우기
 function digit(val){
-  
-    if(val.hour.toString().length == 1){
+    console.log(val.hour);
+    if(val.hour == "Hour"){
+        val.hour = "00";
+    }else if(val.hour.toString().length == 1){
         val.hour = "0"+val.hour;
     }
-    if(val.minute.toString().length == 1){
+    if(val.minute == "Minute"){
+        val.minute ="00";
+    }else if(val.minute.toString().length == 1){
         val.minute = "0"+val.minute;
     }
-    if(val.second.toString().length == 1){
+
+    if(val.second == "Second"){
+        val.second = "00";
+    }else if(val.second.toString().length == 1){
         val.second = "0"+val.second;
     }
     
 }
 
-var to = document.querySelector("#todayList");
 
-
-
-for(var i=0; i<List.length; i++){
-    click(i);
-}
-console.log(List);
-
-function click(ind){
-
-    List[ind].onclick = function(){
-        var s= 0;
-        let lt = List[ind].querySelectorAll("ul li");
-        for(; s<lt.length; s++){
-            console.log(lt[s]);    
-        }
-        
-    };
-}

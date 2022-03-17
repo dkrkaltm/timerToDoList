@@ -8,9 +8,8 @@
     height:500px;
 }
 .ListBox{
-    border:solid 1px black;
-}
 
+}
 .ListImf li{
     margin-top:15px;
     background-color: #E3CAA5;
@@ -24,8 +23,8 @@
 }
 .ListImf span{
     font-weight: bold;
+    color:green;
 }
-
 
 .cInfo{
     display: flex;

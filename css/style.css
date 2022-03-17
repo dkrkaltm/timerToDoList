@@ -1,6 +1,7 @@
 @import "reset.css";
 @import "time.css";
 @import "content.css";
+@import "nav.css";
 
 /* Function */
 .hidden{
