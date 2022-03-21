@@ -34,23 +34,34 @@ var afterImf = [];
 //object variable
 
 function Imf(checked, category){
-    this.onCheck= checked;
-    this.cCategory= category;
-    this.cTitle = cInfo[0].value;
-    this.cTarget = cInfo[1].value;
-    this.cMemo = cMemo.value;
-    this.hour =cSelects[1].options[cSelects[1].selectedIndex].innerText;
-    this.minute =cSelects[2].options[cSelects[2].selectedIndex].innerText;
-    this.second =cSelects[3].options[cSelects[3].selectedIndex].innerText;
+    this.sHour=cSelects[1].selectedIndex,
+    this.sMinute = cSelects[2].selectedIndex,
+    this.sSecond = cSelects[3].selectedIndex,
+    this.onCheck= checked,
+    this.cCategory= category,
+    this.cTitle = cInfo[0].value,
+    this.cTarget = cInfo[1].value,
+    this.cMemo = cMemo.value,
+    this.hour =cSelects[1].options[this.sHour].innerText,
+    this.minute =cSelects[2].options[this.sMinute].innerText,
+    this.second =cSelects[3].options[this.sSecond].innerText,
+
     this.result=function(){
         this.hour= this.hour*3600;
         this.minute= this.minute*60;
-        return this.hour+this.minute+this.second;
+        return this.hour+this.minute+this.second
     };
-}
+};
 
+function Edit(val){
+    cInfo[0].value = val.cTitle,
+    cInfo[1].value = val.cTarget,
+    cMemo.value = val.cMemo,
+    cSelects[1].options[val.sHour].selected=true,
+    cSelects[2].options[val.sMinute].selected=true,
+    cSelects[3].options[val.sSecond].selected=true
 
-
+};
 
 //cWrite select
 //cSelects
@@ -62,6 +73,7 @@ function optionCreate(index,n){
     for(let i = 0;i<n; i++){
         let option = document.createElement('option');
         option.innerText = i; 
+        option.value = i;
         cSelects[index].append(option);       
     }
 }
@@ -89,17 +101,22 @@ function write(event){
             digit(toImf[a]);
             space.innerHTML="<div><span>"+toImf[a].onCheck+" "+"</span>"+"<span>"+toImf[a].cCategory+"</span>"+" "+"<span>"+toImf[a].hour+":"+toImf[a].minute+":"+toImf[a].second+"</span><button type='button'>선택</button></div><h3>"+toImf[a].cTitle+"</h3>" ;
             List[0].querySelector("ul").append(space);
+            a++;
     }else if(category ==="오전"){
             morImf[b] = new Imf(checked,category);
             digit(morImf[b]);
             space.innerHTML="<div><span>"+morImf[b].onCheck+" "+"</span>"+"<span>"+morImf[b].cCategory+"</span>"+" "+"<span>"+morImf[b].hour+":"+morImf[b].minute+":"+morImf[b].second+"</span><button type='button'>선택</button></div><h3>"+morImf[b].cTitle+"</h3>" ;
             List[1].querySelector("ul").append(space);
+            b++;
     }else if(category ==="오후"){
             afterImf[c] = new Imf(checked,category);
             digit(afterImf[c]);
             space.innerHTML="<div><span>"+afterImf[c].onCheck+" "+"</span>"+"<span>"+afterImf[c].cCategory+"</span>"+" "+"<span>"+afterImf[c].hour+":"+afterImf[c].minute+":"+afterImf[c].second+"</span><button type='button'>선택</button></div><h3>"+afterImf[c].cTitle+"</h3>" ;
             List[2].querySelector("ul").append(space);
-    }
+            c++;
+        }
+
+      
 }
 //cInfoSubmit click
 //c = check
@@ -126,17 +143,20 @@ function digit(val){
 
     if(val.hour == "Hour"){
         val.hour = "00";
+        val.sHour = 1;
     }else if(val.hour.toString().length == 1){
         val.hour = "0"+val.hour;
     }
     if(val.minute == "Minute"){
         val.minute ="00";
+        val.sMinute=1;
     }else if(val.minute.toString().length == 1){
         val.minute = "0"+val.minute;
     }
 
     if(val.second == "Second"){
         val.second = "00";
+        val.sSecond=1;
     }else if(val.second.toString().length == 1){
         val.second = "0"+val.second;
     }
@@ -144,28 +164,35 @@ function digit(val){
 }
 
 for(let i =0; i<List.length;i++){
+
     ListChoice(i);
+    console.log(i);  
 }
 
 function ListChoice(i){
     
     List[i].onclick = function()
     {
+             
         li=List[i].querySelectorAll('ul li');
-        for(let i =0; i<li.length;i++){
-            ListLiChoice(i);        
+        console.log(li);
+        for(let z =0; z<li.length;z++){
+            ListLiChoice(z,i);     
+            
         }
     }
 }
-function ListLiChoice(i){
-    li[i].onclick=function(){
-        
+function ListLiChoice(z,i){
+
+    li[z].onclick=function(){
+        console.log("a",i);
+        console.log(List[i].id);
         if(List[i].id === "todayList"){
-                    
+                Edit(toImf[z]);
         }else if(List[i].id === "morningList"){
-
+                Edit(morImf[z]);
         }else if(List[i].id ==="afternoonList"){
-
+                Edit(afterImf[z]);
         }else{
             alert("오류");
         }
