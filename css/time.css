@@ -10,9 +10,14 @@
     align-items: center;
     font-size:4rem;
 }
-#nowAndNext{
-    background-color: brown;
-   
+#timerFct{
+    background-color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#timerFct button{
+    margin:15px;
 }
 #nowAndNext dl {
     

@@ -2,7 +2,8 @@
 
 //timerSelector
 var tWrite = document.querySelector("#timer span");
-
+var tButton = document.querySelectorAll("#timerFct button");
+console.log(tStart);
 //cWriteSelector
 var cSelects = document.querySelectorAll(".cSelects select");
 
@@ -30,37 +31,36 @@ var li;
 var toImf = [];
 var morImf = [];
 var afterImf = [];
-
+var tResult;
 //object variable
 
 function Imf(checked, category){
-    this.sHour=cSelects[1].selectedIndex,
-    this.sMinute = cSelects[2].selectedIndex,
-    this.sSecond = cSelects[3].selectedIndex,
-    this.onCheck= checked,
-    this.cCategory= category,
-    this.cTitle = cInfo[0].value,
-    this.cTarget = cInfo[1].value,
-    this.cMemo = cMemo.value,
-    this.hour =cSelects[1].options[this.sHour].innerText,
-    this.minute =cSelects[2].options[this.sMinute].innerText,
-    this.second =cSelects[3].options[this.sSecond].innerText,
+    this.sCate = cSelects[0].selectedIndex;
+    this.sHour=cSelects[1].selectedIndex;
+    this.sMinute = cSelects[2].selectedIndex;
+    this.sSecond = cSelects[3].selectedIndex;
+    this.onCheck= checked;
+    this.cCategory= category;
+    this.cTitle = cInfo[0].value;
+    this.cTarget = cInfo[1].value;
+    this.cMemo = cMemo.value;
+    this.hour =cSelects[1].options[this.sHour].innerText;
+    this.minute =cSelects[2].options[this.sMinute].innerText;
+    this.second =cSelects[3].options[this.sSecond].innerText;
 
     this.result=function(){
-        this.hour= this.hour*3600;
-        this.minute= this.minute*60;
-        return this.hour+this.minute+this.second
+        return (this.hour*3600)+(this.minute*60)+Number(this.second)
     };
 };
 
 function Edit(val){
-    cInfo[0].value = val.cTitle,
-    cInfo[1].value = val.cTarget,
-    cMemo.value = val.cMemo,
-    cSelects[1].options[val.sHour].selected=true,
-    cSelects[2].options[val.sMinute].selected=true,
-    cSelects[3].options[val.sSecond].selected=true
-
+    cSelects[0].options[val.sCate].selected = true;
+    cInfo[0].value = val.cTitle;
+    cInfo[1].value = val.cTarget;
+    cMemo.value = val.cMemo;
+    cSelects[1].options[val.sHour].selected=true;
+    cSelects[2].options[val.sMinute].selected=true;
+    cSelects[3].options[val.sSecond].selected=true;
 };
 
 //cWrite select
@@ -122,22 +122,7 @@ function write(event){
 //c = check
 cInfoSubmit.addEventListener('submit',write);
 
-// timer function
-// 선택한 todo에 따른 시간
-// 총합 초를 감소 시키며 시 분 초 구하기
 
-
-// var timer =setInterval(function(){
-//     let time ={
-//         hour: Math.floor(tResult/3600),
-//         minute: Math.floor((tResult%3600)/60),
-//         second: Math.floor((tResult%3600)%60)
-//     };
-//    digit(time);
-//    tWrite.innerText = time.hour+":"+time.minute+":"+time.second;
-//    console.log("시:"+time.hour+"분:"+time.minute+"초"+time.second);
-//    tResult--;
-// },1000)
 // 자릿수에 따라 0채우기
 function digit(val){
 
@@ -189,13 +174,53 @@ function ListLiChoice(z,i){
         console.log(List[i].id);
         if(List[i].id === "todayList"){
                 Edit(toImf[z]);
+                tResult = toImf[z].result();
+                console.log("hour",toImf[z].hour*3600,"minute",toImf[z].minute*60,"second",Number(toImf[z].second) ,"result",toImf[z].result());
+                tWrite.innerText = toImf[z].hour+":"+toImf[z].minute+":"+toImf[z].second;    
         }else if(List[i].id === "morningList"){
                 Edit(morImf[z]);
+                tWrite.innerText = morImf[z].hour+":"+morImf[z].minute+":"+morImf[z].second;
         }else if(List[i].id ==="afternoonList"){
                 Edit(afterImf[z]);
+                tWrite.innerText = afterImf[z].hour+":"+afterImf[z].minute+":"+afterImf[z].second;
         }else{
             alert("오류");
         }
         //  now.querySelector("dd").innerText = 
     }
 }
+
+tButton[0].onclick=function(){
+    alert("b");
+    setInterval(timer,1000);
+}
+tButton[1].onclick=function(){
+    clearInterval(tButton[0].onclick);
+}
+
+
+function timer(){
+    let time ={
+        hour: Math.floor(tResult/3600),
+        minute: Math.floor((tResult%3600)/60),
+        second: Math.floor((tResult%3600)%60)
+    };
+   digit(time);
+   tWrite.innerText = time.hour+":"+time.minute+":"+time.second;
+   console.log("시:"+time.hour+"분:"+time.minute+"초"+time.second);
+   tResult--;
+}
+// timer function
+// 선택한 todo에 따른 시간
+// 총합 초를 감소 시키며 시 분 초 구하기
+// var timer =setInterval(function(){
+//     let time ={
+//         hour: Math.floor(tResult/3600),
+//         minute: Math.floor((tResult%3600)/60),
+//         second: Math.floor((tResult%3600)%60)
+//     };
+//    digit(time);
+//    tWrite.innerText = time.hour+":"+time.minute+":"+time.second;
+//    console.log("시:"+time.hour+"분:"+time.minute+"초"+time.second);
+//    tResult--;
+// },1000)
