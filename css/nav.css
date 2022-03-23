@@ -1,4 +1,12 @@
-.toDoList a{
+
+nav{
     font-weight: bolder;
     font-size: 1.2rem;
+    position: fixed;
+    display: flex;
+    right:33%;
 }
+nav a{
+    margin-right:15px;
+}
+

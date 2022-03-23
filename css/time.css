@@ -19,10 +19,4 @@
 #timerFct button{
     margin:15px;
 }
-#nowAndNext dl {
-    
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-}
+

@@ -31,7 +31,9 @@ var li;
 var toImf = [];
 var morImf = [];
 var afterImf = [];
+var idx = [0,0,0];
 var tResult;
+var timerId=null;
 //object variable
 
 function Imf(checked, category){
@@ -62,10 +64,9 @@ function Edit(val){
     cSelects[2].options[val.sMinute].selected=true;
     cSelects[3].options[val.sSecond].selected=true;
 };
-
 //cWrite select
 //cSelects
-optionCreate(1,100);
+optionCreate(1,60);
 optionCreate(2, 60);
 optionCreate(3, 60);
 
@@ -78,6 +79,11 @@ function optionCreate(index,n){
     }
 }
 
+
+
+
+//값 등록
+cInfoSubmit.addEventListener('submit',write);
 
 function write(event){
     event.preventDefault();
@@ -95,20 +101,22 @@ function write(event){
         category = "오늘";
     }
 
-    
     if(category === "오늘"){
+            i=0;
             toImf[a] = new Imf(checked,category);
             digit(toImf[a]);
             space.innerHTML="<div><span>"+toImf[a].onCheck+" "+"</span>"+"<span>"+toImf[a].cCategory+"</span>"+" "+"<span>"+toImf[a].hour+":"+toImf[a].minute+":"+toImf[a].second+"</span><button type='button'>선택</button></div><h3>"+toImf[a].cTitle+"</h3>" ;
             List[0].querySelector("ul").append(space);
             a++;
     }else if(category ==="오전"){
+            i=1;
             morImf[b] = new Imf(checked,category);
             digit(morImf[b]);
             space.innerHTML="<div><span>"+morImf[b].onCheck+" "+"</span>"+"<span>"+morImf[b].cCategory+"</span>"+" "+"<span>"+morImf[b].hour+":"+morImf[b].minute+":"+morImf[b].second+"</span><button type='button'>선택</button></div><h3>"+morImf[b].cTitle+"</h3>" ;
             List[1].querySelector("ul").append(space);
             b++;
     }else if(category ==="오후"){
+            i=2;
             afterImf[c] = new Imf(checked,category);
             digit(afterImf[c]);
             space.innerHTML="<div><span>"+afterImf[c].onCheck+" "+"</span>"+"<span>"+afterImf[c].cCategory+"</span>"+" "+"<span>"+afterImf[c].hour+":"+afterImf[c].minute+":"+afterImf[c].second+"</span><button type='button'>선택</button></div><h3>"+afterImf[c].cTitle+"</h3>" ;
@@ -116,16 +124,29 @@ function write(event){
             c++;
         }
 
-      
-}
+//입력란 초기화
+        cSelects[0].options[0].selected = true;
+        cInfo[0].value = "";
+        cInfo[1].value = "";
+        cMemo.value = "";
+        cSelects[1].options[0].selected=true;
+        cSelects[2].options[0].selected=true;
+        cSelects[3].options[0].selected=true;  
+
+// 클로저를 통한 값 등록
+// 각 섹션안에 당겨져있는 li의 갯수 만큼 추가
+        li=List[i].querySelectorAll('ul li');
+        console.log(li,"idx",idx[i]);
+            ListLiChoice(i,idx[i]++);     
+            
+    }
 //cInfoSubmit click
 //c = check
-cInfoSubmit.addEventListener('submit',write);
+
 
 
 // 자릿수에 따라 0채우기
 function digit(val){
-
     if(val.hour == "Hour"){
         val.hour = "00";
         val.sHour = 1;
@@ -148,41 +169,39 @@ function digit(val){
     
 }
 
-for(let i =0; i<List.length;i++){
+// for(let i =0; i<List.length;i++){
 
-    ListChoice(i);
-    console.log(i);  
-}
+//     ListChoice(i);
+//     console.log(i);  
+// }
 
-function ListChoice(i){
+// function ListChoice(i){
     
-    List[i].onclick = function()
-    {
-             
-        li=List[i].querySelectorAll('ul li');
-        console.log(li);
-        for(let z =0; z<li.length;z++){
-            ListLiChoice(z,i);     
-            
-        }
-    }
-}
-function ListLiChoice(z,i){
+//     List[i].onclick = function()
+//     {
 
-    li[z].onclick=function(){
-        console.log("a",i);
-        console.log(List[i].id);
+//     }
+// }
+function ListLiChoice(i,idx){
+   
+    li[idx].onclick=function(){
+        clearInterval(timerId);
+        console.log("i",i);
+        
         if(List[i].id === "todayList"){
-                Edit(toImf[z]);
-                tResult = toImf[z].result();
-                console.log("hour",toImf[z].hour*3600,"minute",toImf[z].minute*60,"second",Number(toImf[z].second) ,"result",toImf[z].result());
-                tWrite.innerText = toImf[z].hour+":"+toImf[z].minute+":"+toImf[z].second;    
-        }else if(List[i].id === "morningList"){
-                Edit(morImf[z]);
-                tWrite.innerText = morImf[z].hour+":"+morImf[z].minute+":"+morImf[z].second;
+                Edit(toImf[idx]);
+                console.log(List[i].querySelectorAll("ul li")[i]);
+                tResult = toImf[idx].result();
+                console.log("hour",toImf[idx].hour*3600,"minute",toImf[idx].minute*60,"second",Number(toImf[idx].second) ,"result",toImf[idx].result());
+                tWrite.innerText = toImf[idx].hour+":"+toImf[idx].minute+":"+toImf[idx].second;    
+            }else if(List[i].id === "morningList"){
+                Edit(morImf[idx]);
+                tResult = morImf[idx].result();
+                tWrite.innerText = morImf[idx].hour+":"+morImf[idx].minute+":"+morImf[idx].second;
         }else if(List[i].id ==="afternoonList"){
-                Edit(afterImf[z]);
-                tWrite.innerText = afterImf[z].hour+":"+afterImf[z].minute+":"+afterImf[z].second;
+                Edit(afterImf[idx]);
+                tResult = afterImf[idx].result();
+                tWrite.innerText = afterImf[idx].hour+":"+afterImf[idx].minute+":"+afterImf[idx].second;
         }else{
             alert("오류");
         }
@@ -192,14 +211,22 @@ function ListLiChoice(z,i){
 
 tButton[0].onclick=function(){
     alert("b");
-    setInterval(timer,1000);
+timerId=setInterval(timer,1000);
+
 }
 tButton[1].onclick=function(){
-    clearInterval(tButton[0].onclick);
+    alert("c");
+    clearInterval(timerId);
 }
 
 
 function timer(){
+    console.log("tResult",tResult);
+    if(tResult <=0){
+        clearInterval(timerId);
+        return 0;
+    }    
+    tResult--;
     let time ={
         hour: Math.floor(tResult/3600),
         minute: Math.floor((tResult%3600)/60),
@@ -208,7 +235,7 @@ function timer(){
    digit(time);
    tWrite.innerText = time.hour+":"+time.minute+":"+time.second;
    console.log("시:"+time.hour+"분:"+time.minute+"초"+time.second);
-   tResult--;
+   
 }
 // timer function
 // 선택한 todo에 따른 시간
