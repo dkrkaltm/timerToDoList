@@ -7,6 +7,9 @@
 .hidden{
     display: none;
 }
+.backgroudColor{
+    background-color: #AD8B73;
+}
 .sLeft{
     flex-grow:3;
     width: 500px;

@@ -22,18 +22,22 @@ var List = document.querySelectorAll("#cList section");
 var cInfo = document.querySelectorAll(".cInfo input");
 var cMemo = document.querySelector("#cMemo");
 
-//now
-var now = document.querySelector("#now");
+//cCorrection
+var corrctionBtn = document.querySelector("#cCorrection");
+var cInfoSubmits = document.querySelector("#cInfoSubmit"); 
 //variable
 var i=0;
 var a=0,b=0,c=0;
 var li;
+var liSpan;
 var toImf = [];
 var morImf = [];
 var afterImf = [];
 var idx = [0,0,0];
 var tResult;
 var timerId=null;
+var idxCheck = -1;
+var listCheck = -1;
 //object variable
 
 function Imf(checked, category){
@@ -83,7 +87,7 @@ function optionCreate(index,n){
 
 
 //값 등록
-cInfoSubmit.addEventListener('submit',write);
+cInfoSubmit.addEventListener("submit",write);
 
 function write(event){
     event.preventDefault();
@@ -125,17 +129,11 @@ function write(event){
         }
 
 //입력란 초기화
-        cSelects[0].options[0].selected = true;
-        cInfo[0].value = "";
-        cInfo[1].value = "";
-        cMemo.value = "";
-        cSelects[1].options[0].selected=true;
-        cSelects[2].options[0].selected=true;
-        cSelects[3].options[0].selected=true;  
+        wInitialization();
 
 // 클로저를 통한 값 등록
 // 각 섹션안에 당겨져있는 li의 갯수 만큼 추가
-        li=List[i].querySelectorAll('ul li');
+    
         console.log(li,"idx",idx[i]);
             ListLiChoice(i,idx[i]++);     
             
@@ -168,50 +166,69 @@ function digit(val){
     }
     
 }
-
-// for(let i =0; i<List.length;i++){
-
-//     ListChoice(i);
-//     console.log(i);  
-// }
-
-// function ListChoice(i){
-    
-//     List[i].onclick = function()
-//     {
-
-//     }
-// }
+function wInitialization(){
+    cSelects[0].options[0].selected = true;
+    cInfo[0].value = "";
+    cInfo[1].value = "";
+    cMemo.value = "";
+    cSelects[1].options[0].selected=true;
+    cSelects[2].options[0].selected=true;
+    cSelects[3].options[0].selected=true;  
+}
 function ListLiChoice(i,idx){
-   
+
+    li=List[i].querySelectorAll('ul li');
+    console.log(li);
     li[idx].onclick=function(){
         clearInterval(timerId);
-        console.log("i",i);
-        
+    if(listCheck !== i || idx !== idxCheck){
+        if(listCheck != -1 && idxCheck !=-1){
+            List[listCheck].querySelectorAll("ul li")[idxCheck].style.backgroundColor = "#E3CAA5";
+        }
         if(List[i].id === "todayList"){
                 Edit(toImf[idx]);
-                console.log(List[i].querySelectorAll("ul li")[i]);
                 tResult = toImf[idx].result();
-                console.log("hour",toImf[idx].hour*3600,"minute",toImf[idx].minute*60,"second",Number(toImf[idx].second) ,"result",toImf[idx].result());
                 tWrite.innerText = toImf[idx].hour+":"+toImf[idx].minute+":"+toImf[idx].second;    
             }else if(List[i].id === "morningList"){
                 Edit(morImf[idx]);
                 tResult = morImf[idx].result();
                 tWrite.innerText = morImf[idx].hour+":"+morImf[idx].minute+":"+morImf[idx].second;
-        }else if(List[i].id ==="afternoonList"){
+            }else if(List[i].id ==="afternoonList"){
                 Edit(afterImf[idx]);
                 tResult = afterImf[idx].result();
                 tWrite.innerText = afterImf[idx].hour+":"+afterImf[idx].minute+":"+afterImf[idx].second;
-        }else{
+                
+            }else{
             alert("오류");
         }
-        //  now.querySelector("dd").innerText = 
+        liSpan = List[i].querySelectorAll("ul li")[idx];
+        liSpan.style.backgroundColor = "#AD8B73";
+        corrctionBtn.classList.remove("hidden");
+        cInfoSubmits.classList.add("hidden");
+        idxCheck=idx;
+        listCheck=i;
+    
+        }else{
+            idxCheck =-1;
+            listCheck =-1;
+            liSpan.style.backgroundColor = "#E3CAA5";
+            wInitialization();
+            corrctionBtn.classList.add("hidden");
+            cInfoSubmits.classList.remove("hidden");
+        }
     }
 }
-
+corrctionBtn.onclick = function(e){
+    let changeValue;
+    e.preventDefault();
+    console.log(i, idxCheck);
+    changeValue =  new Imf(1,2);
+    toImf[idxCheck] = changeValue;
+    console.log(toImf[idxCheck]);
+}
 tButton[0].onclick=function(){
     alert("b");
-timerId=setInterval(timer,1000);
+    timerId=setInterval(timer,1000);
 
 }
 tButton[1].onclick=function(){
