@@ -13,10 +13,17 @@
 #timerFct{
     background-color: red;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 #timerFct button{
     margin:15px;
 }
-
+#timerFct dl{
+    width:100%;
+}
+#progress{
+    width:100%;
+    height:40px;
+}

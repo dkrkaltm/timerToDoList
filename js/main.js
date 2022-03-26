@@ -23,7 +23,7 @@ var cInfo = document.querySelectorAll(".cInfo input");
 var cMemo = document.querySelector("#cMemo");
 
 //cCorrection
-var corrctionBtn = document.querySelector("#cCorrection");
+var correctionBtn = document.querySelector("#cCorrection");
 var cInfoSubmits = document.querySelector("#cInfoSubmit"); 
 //variable
 var i=0;
@@ -40,25 +40,26 @@ var idxCheck = -1;
 var listCheck = -1;
 //object variable
 
+// 객체 생성및 값 초기화
 function Imf(checked, category){
-    this.sCate = cSelects[0].selectedIndex;
-    this.sHour=cSelects[1].selectedIndex;
-    this.sMinute = cSelects[2].selectedIndex;
-    this.sSecond = cSelects[3].selectedIndex;
-    this.onCheck= checked;
-    this.cCategory= category;
-    this.cTitle = cInfo[0].value;
-    this.cTarget = cInfo[1].value;
-    this.cMemo = cMemo.value;
-    this.hour =cSelects[1].options[this.sHour].innerText;
-    this.minute =cSelects[2].options[this.sMinute].innerText;
-    this.second =cSelects[3].options[this.sSecond].innerText;
-
+    this.sCate = cSelects[0].selectedIndex,
+    this.sHour=cSelects[1].selectedIndex,
+    this.sMinute = cSelects[2].selectedIndex,
+    this.sSecond = cSelects[3].selectedIndex,
+    this.onCheck= checked,
+    this.cCategory= category,
+    this.cTitle = cInfo[0].value,
+    this.cTarget = cInfo[1].value,
+    this.cMemo = cMemo.value,
+    this.hour =cSelects[1].options[this.sHour].innerText,
+    this.minute =cSelects[2].options[this.sMinute].innerText,
+    this.second =cSelects[3].options[this.sSecond].innerText,
     this.result=function(){
         return (this.hour*3600)+(this.minute*60)+Number(this.second)
     };
 };
 
+// 선택된 리스트의 정보가 들어있는 배열에서 정보 저장
 function Edit(val){
     cSelects[0].options[val.sCate].selected = true;
     cInfo[0].value = val.cTitle;
@@ -109,21 +110,21 @@ function write(event){
             i=0;
             toImf[a] = new Imf(checked,category);
             digit(toImf[a]);
-            space.innerHTML="<div><span>"+toImf[a].onCheck+" "+"</span>"+"<span>"+toImf[a].cCategory+"</span>"+" "+"<span>"+toImf[a].hour+":"+toImf[a].minute+":"+toImf[a].second+"</span><button type='button'>선택</button></div><h3>"+toImf[a].cTitle+"</h3>" ;
+            space.innerHTML="<div><span>"+toImf[a].onCheck+" "+"</span>"+"<span>"+toImf[a].cCategory+"</span>"+" "+"<span>"+toImf[a].hour+":"+toImf[a].minute+":"+toImf[a].second+"</span></div><h3>"+toImf[a].cTitle+"</h3>" ;
             List[0].querySelector("ul").append(space);
             a++;
     }else if(category ==="오전"){
             i=1;
             morImf[b] = new Imf(checked,category);
             digit(morImf[b]);
-            space.innerHTML="<div><span>"+morImf[b].onCheck+" "+"</span>"+"<span>"+morImf[b].cCategory+"</span>"+" "+"<span>"+morImf[b].hour+":"+morImf[b].minute+":"+morImf[b].second+"</span><button type='button'>선택</button></div><h3>"+morImf[b].cTitle+"</h3>" ;
+            space.innerHTML="<div><span>"+morImf[b].onCheck+" "+"</span>"+"<span>"+morImf[b].cCategory+"</span>"+" "+"<span>"+morImf[b].hour+":"+morImf[b].minute+":"+morImf[b].second+"</span></div><h3>"+morImf[b].cTitle+"</h3>" ;
             List[1].querySelector("ul").append(space);
             b++;
     }else if(category ==="오후"){
             i=2;
             afterImf[c] = new Imf(checked,category);
             digit(afterImf[c]);
-            space.innerHTML="<div><span>"+afterImf[c].onCheck+" "+"</span>"+"<span>"+afterImf[c].cCategory+"</span>"+" "+"<span>"+afterImf[c].hour+":"+afterImf[c].minute+":"+afterImf[c].second+"</span><button type='button'>선택</button></div><h3>"+afterImf[c].cTitle+"</h3>" ;
+            space.innerHTML="<div><span>"+afterImf[c].onCheck+" "+"</span>"+"<span>"+afterImf[c].cCategory+"</span>"+" "+"<span>"+afterImf[c].hour+":"+afterImf[c].minute+":"+afterImf[c].second+"</span></div><h3>"+afterImf[c].cTitle+"</h3>" ;
             List[2].querySelector("ul").append(space);
             c++;
         }
@@ -181,6 +182,7 @@ function ListLiChoice(i,idx){
     console.log(li);
     li[idx].onclick=function(){
         clearInterval(timerId);
+        console.log("this",this);
     if(listCheck !== i || idx !== idxCheck){
         if(listCheck != -1 && idxCheck !=-1){
             List[listCheck].querySelectorAll("ul li")[idxCheck].style.backgroundColor = "#E3CAA5";
@@ -202,29 +204,44 @@ function ListLiChoice(i,idx){
             alert("오류");
         }
         liSpan = List[i].querySelectorAll("ul li")[idx];
-        liSpan.style.backgroundColor = "#AD8B73";
-        corrctionBtn.classList.remove("hidden");
+        this.style.backgroundColor = "#AD8B73";
+        correctionBtn.classList.remove("hidden");
         cInfoSubmits.classList.add("hidden");
         idxCheck=idx;
         listCheck=i;
-    
+        cInfo[0].disabled = true;
+
         }else{
             idxCheck =-1;
             listCheck =-1;
             liSpan.style.backgroundColor = "#E3CAA5";
             wInitialization();
-            corrctionBtn.classList.add("hidden");
+            correctionBtn.classList.add("hidden");
             cInfoSubmits.classList.remove("hidden");
+            cInfo[0].disabled = false;
         }
     }
 }
-corrctionBtn.onclick = function(e){
-    let changeValue;
+
+// list -> title(불가) memo는 그대로 배열 객체에만 저장, 나머지 span 태그 데이터 저장
+// 원래 사용하던 객체의 값을 변경 -> funcition이 따로 필요해 보임 
+//
+correctionBtn.onclick = function(e){
+    
     e.preventDefault();
-    console.log(i, idxCheck);
-    changeValue =  new Imf(1,2);
-    toImf[idxCheck] = changeValue;
-    console.log(toImf[idxCheck]);
+    console.log(i, idxCheck, liSpan,this);
+    let listChange = liSpan.querySelectorAll("div span");
+    
+    if(i == 0){
+
+    }else if(i==1){
+
+    }else if(i==2){
+
+    }else{
+        alert("오류");
+    }
+
 }
 tButton[0].onclick=function(){
     alert("b");
@@ -238,8 +255,8 @@ tButton[1].onclick=function(){
 
 
 function timer(){
-    console.log("tResult",tResult);
-    if(tResult <=0){
+    console.log("tResult",isNaN(tResult));
+    if(tResult <=0 || isNaN(tResult) == true){
         clearInterval(timerId);
         return 0;
     }    

@@ -48,6 +48,9 @@
     margin-top:10px;
    
 }
+.cInfo input{
+    height:35px;
+}
 #cInfoSubmit{
     margin-left: 8px;
 
@@ -55,4 +58,6 @@
 .cSelects select{
     height:27px;
 }
-
+#todayList{
+    margin-top:35px;
+}

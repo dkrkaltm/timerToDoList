@@ -20,9 +20,18 @@
             </article>
             <article class="sRight" id="timerFct">
                 <h1 class="hidden" >nextPlan</h1>
-                <button  id="tStart" type="button">시작</button>
-                <button  id="tPause"type="button">일시중지</button>
-                <button id="tInitialization" type="button" >초기화</button>
+                <dl>
+                    <dt>
+                        진행도 <span>0%</span>
+                    </dt> 
+                    <dd>
+                        <progress id="progress" value="" max="100"></progress>
+                    </dd>
+                </dl>
+                <div> 
+                    <button  id="tStart" type="button">시작</button>
+                    <button  id="tPause"type="button">일시중지</button>
+                </div>
             </article>
         </section>
 
