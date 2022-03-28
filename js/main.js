@@ -1,44 +1,46 @@
 //selector
 
 //timerSelector
-var tWrite = document.querySelector("#timer span");
-var tButton = document.querySelectorAll("#timerFct button");
-console.log(tStart);
+let tWrite = document.querySelector("#timer span");
+let tButton = document.querySelectorAll("#timerFct button");
+
 //cWriteSelector
-var cSelects = document.querySelectorAll(".cSelects select");
+let cSelects = document.querySelectorAll(".cSelects select");
 
 //cInfoSubmit
-var cInfoSubmit = document.querySelector("#cWriteForm");
+let cInfoSubmit = document.querySelector("#cWriteForm");
 
 
 //onCheck
-var onCheck  = document.querySelector("#onCheck");
+let onCheck  = document.querySelector("#onCheck");
 
 //cList
-var cList = document.querySelector("#cList");
-var List = document.querySelectorAll("#cList section");
+let cList = document.querySelector("#cList");
+let List = document.querySelectorAll("#cList section");
 
 //cInfo
-var cInfo = document.querySelectorAll(".cInfo input");
-var cMemo = document.querySelector("#cMemo");
+let cInfo = document.querySelectorAll(".cInfo input");
+let cMemo = document.querySelector("#cMemo");
 
 //cCorrection
-var cInfoButton = document.querySelector("#cInfoSubmit"); 
+let cInfoButton = document.querySelector("#cInfoSubmit"); 
+let cInfoRemove = document.querySelector("#cInfoRemove");
 //variable
-var liSpan,liMemo,liTitle
-var i=0;
-var a=0,b=0,c=0;
-var li;
-var liSpan;
-var toImf = [];
-var morImf = [];
-var afterImf = [];
-var idx = [0,0,0];
-var tResult;
-var timerId=null;
-var idxCheck = -1;
-var listCheck = -1;
-var time;
+let category;
+let liSpan,liMemo,liTitle
+let i=0;
+let a=0,b=0,c=0;
+let li;
+let toImf = [];
+let morImf = [];
+let afterImf = [];
+let idx = [0,0,0];
+let tResult;
+let timerId=null;
+let idxCheck = -1;
+let listCheck = -1;
+let time;
+let correctionData;
 //object variable
 
 // 객체 생성및 값 초기화
@@ -60,7 +62,7 @@ var time;
 //     };
 // };
 // 반복여부, 카테고리, 주제, 목표, 내용, 시간, 초로 변환
-var varImf ={
+let varImf ={
     check:"",
     category:"",
     title:"",
@@ -82,7 +84,7 @@ function saveImf(varImf, reg){
     varImf.title = reg[5].value;
     varImf.target = reg[6].value;
     varImf.memo = reg[7].value;
-    console.log("ss",varImf.memo);
+
 }
 // 선택된 리스트의 정보가 들어있는 배열에서 정보 저장
 // 정보 출력 
@@ -104,14 +106,19 @@ function optionCreate(index,n){
 
 
 function spaceImf(varImf,n){
-    let space =document.createElement("li");
+   let space =document.createElement("li");
     space.innerHTML = "<div><span>"+varImf.check+"</span> <span>"+varImf.category+"</span> <span>"+varImf.hour+":"+varImf.minute+":"+varImf.second+"</span></div><h3>"+varImf.title+"</h3><p class='hidden'>"+varImf.target+"</p><p class='hidden'>"+varImf.memo+"</p>";
     List[n].querySelector("ul").append(space);
 }
 
 //값 등록
 cInfoSubmit.addEventListener("submit",write);
-
+cInfoRemove.onclick = function(){
+    correctionData.remove();
+    wInitialization();
+    cInfoRemove.classList.add("hidden");
+    cInfoButton.innerText = "등록";
+}
 function write(event){
     event.preventDefault();
     let n;
@@ -121,15 +128,17 @@ function write(event){
     }else{
         varImf.check = "";
     }
-
+function sectionIndex(index){
+    if(index[1].selectedIndex != 0){
+        n = (index[1].selectedIndex)-1;
+     
+    }else{
+        n= index[1].selectedIndex;
+    }         
+}
+// 카테고리 선택된 인덱스 번호로 어느 섹션에 해당되는지 구분
     if(cInfoButton.innerText ==="등록"){ 
-        if(this[1].selectedIndex != 0){
-            n = (this[1].selectedIndex)-1;
-         
-        }else{
-            n= this[1].selectedIndex;
-        }
-                console.log(this);
+                sectionIndex(this);
                 saveImf(varImf, this);
                 digit(varImf);
                 spaceImf(varImf, n);
@@ -137,25 +146,40 @@ function write(event){
     }else if(cInfoButton.innerText === "수정"){
         saveImf(varImf, this);
         digit(varImf);
-        liSpan[0].innerText = varImf.check;
-        liSpan[1].innerText = varImf.category;
-        liSpan[2].innerText = varImf.hour+":"+varImf.minute+":"+varImf.second;
+    
+      if(category == varImf.category){
+            reWrite(varImf);
+            return;
+        }else{
+           if(category == "오늘"){
+                n=0;
+           }else if(category =="오전"){
+                n=1;
+           }else{
+                n=2;
+           }
 
-        liTitle.innerText = varImf.title;
-        liMemo[0].innerText = varImf.target;
-        liMemo[1].innerText = varImf.memo;
+            idx[n]--;
+            sectionIndex(this);
+            reWrite(varImf);
+            List[n].querySelector("ul").append(correctionData);
+            alert(n);
+        }
+
+        
     }else{
         alert("오류");
     }
-
 //입력란 초기화
-  wInitialization();
+          wInitialization();
 
 // 클로저를 통한 값 등록
 // 각 섹션안에 당겨져있는 li의 갯수 만큼 추가
     
-        // console.log(li,"idx",idx[i]);
-          ListLiChoice(n, idx[n]++);     
+        //  n == list, idx == li
+
+          ListLiChoice(n, idx[n]++);    
+           
             
     }
 //cInfoSubmit click
@@ -185,6 +209,24 @@ function digit(val){
     }
     
 }
+//write 값 변경
+function reWrite(varImf){
+    liSpan[0].innerText = varImf.check;
+    liSpan[1].innerText = varImf.category;
+    liSpan[2].innerText = varImf.hour+":"+varImf.minute+":"+varImf.second;
+    liTitle.innerText = varImf.title;
+    liMemo[0].innerText = varImf.target;
+    liMemo[1].innerText = varImf.memo;
+
+    //선택 초기화, 버튼 초기화
+    List[listCheck].querySelectorAll("ul li")[idxCheck].style.backgroundColor = "#E3CAA5";
+    idxCheck=-1;
+    listCheck=-1;
+    cInfoButton.innerText = "등록";
+    cInfoRemove.classList.add("hidden");
+}
+
+//write 초기화
 function wInitialization(){
     onCheck.checked = false;
     cSelects[0].options[0].selected = true;
@@ -200,16 +242,17 @@ function wInitialization(){
 function ListLiChoice(n ,idx){
 
     li=List[n].querySelectorAll("ul li");
-    console.log(li);
+    
     li[idx].onclick=function(){
         clearInterval(timerId);
-        console.log("this",this.querySelectorAll("span"), this.querySelector("h3"));
+     
     if(listCheck !== n || idx !== idxCheck){
        
         if(listCheck != -1 && idxCheck !=-1){
             List[listCheck].querySelectorAll("ul li")[idxCheck].style.backgroundColor = "#E3CAA5";
         }
 
+        correctionData = this;
         liSpan  = this.querySelectorAll("span");
         liTitle = this.querySelector("h3");
         liMemo = this.querySelectorAll("p");
@@ -223,14 +266,16 @@ function ListLiChoice(n ,idx){
         for(let a =0; a<cSelects[0].options.length;a++){
             if(liSpan[1].innerText === cSelects[0].options[a].innerText){
                 cSelects[0].options[a].selected = true;
+                category = cSelects[0].options[a].innerText;
                 break;
-             
             }
         }
         cSelects[1].options[Number(time[0])+1].selected = true;
         cSelects[2].options[Number(time[1])+1].selected = true;
         cSelects[3].options[Number(time[2])+1].selected = true;
 
+        
+        
         //내용
         cInfo[0].value = liTitle.innerText;
         cInfo[1].value = liMemo[0].innerText;
@@ -245,8 +290,9 @@ function ListLiChoice(n ,idx){
         tWrite.innerText = varImf.hour+":"+varImf.minute+":"+varImf.second;
         tResult = varImf.result();
 
-        console.log(liSpan, liTitle, liMemo);
+  
         cInfoButton.innerText = "수정";
+        cInfoRemove.classList.remove("hidden");
         this.style.backgroundColor = "#AD8B73";
         idxCheck=idx;
         listCheck=n;
@@ -254,6 +300,7 @@ function ListLiChoice(n ,idx){
     }
     else{
         cInfoButton.innerText = "등록";
+        cInfoRemove.classList.add("hidden");
         idxCheck =-1;
         listCheck =-1;
         this.style.backgroundColor = "#E3CAA5";
@@ -280,7 +327,7 @@ tButton[1].onclick=function(){
 
 
 function timer(){
-    console.log("tResult",isNaN(tResult));
+ 
     if(tResult <=0 || isNaN(tResult) == true){
         clearInterval(timerId);
         return 0;
@@ -293,6 +340,6 @@ function timer(){
     };
    digit(time);
    tWrite.innerText = time.hour+":"+time.minute+":"+time.second;
-   console.log("시:"+time.hour+"분:"+time.minute+"초"+time.second);
+
    
 }
