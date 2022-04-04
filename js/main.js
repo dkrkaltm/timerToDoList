@@ -16,8 +16,9 @@ let onCheck  = document.querySelector("#onCheck");
 
 //cList
 let cList = document.querySelector("#cList");
-let List = document.querySelectorAll("#cList section");
-
+let nowTime = cList.querySelectorAll("nav a ");
+let List = cList.querySelectorAll("section");
+ 
 //cInfo
 let cInfo = document.querySelectorAll(".cInfo input");
 let cMemo = document.querySelector("#cMemo");
@@ -25,6 +26,19 @@ let cMemo = document.querySelector("#cMemo");
 //cCorrection
 let cInfoButton = document.querySelector("#cInfoSubmit"); 
 let cInfoRemove = document.querySelector("#cInfoRemove");
+
+//date, time
+let date = new Date();
+
+//modal
+let modal = document.querySelector("#modal");
+let modalBtn = modal.querySelectorAll("button");
+
+//진행도
+let progress = document.querySelector("progress");
+
+
+
 //variable
 let category;
 let liSpan,liMemo,liTitle
@@ -41,28 +55,11 @@ let idxCheck = -1;
 let listCheck = -1;
 let time;
 let correctionData;
+let timeRoot = 0;
+let max=0;
+let val=0;
 //object variable
-
-// 객체 생성및 값 초기화
-// function Imf(checked, category){
-//     this.sCate = cSelects[0].selectedIndex,
-//     this.sHour=cSelects[1].selectedIndex,
-//     this.sMinute = cSelects[2].selectedIndex,
-//     this.sSecond = cSelects[3].selectedIndex,
-//     this.onCheck= checked,
-//     this.cCategory= category,
-//     this.cTitle = cInfo[0].value,
-//     this.cTarget = cInfo[1].value,
-//     this.cMemo = cMemo.value,
-//     this.hour =cSelects[1].options[this.sHour].innerText,
-//     this.minute =cSelects[2].options[this.sMinute].innerText,
-//     this.second =cSelects[3].options[this.sSecond].innerText,
-//     this.result=function(){
-//         return (this.hour*3600)+(this.minute*60)+Number(this.second)
-//     };
-// };
-// 반복여부, 카테고리, 주제, 목표, 내용, 시간, 초로 변환
-let varImf ={
+const varImf ={
     check:"",
     category:"",
     title:"",
@@ -71,9 +68,9 @@ let varImf ={
     hour:0,
     minute:0,
     second:0,
-    result:function(){
+    result(){
         return (this.hour*3600)+(this.minute*60)+Number(this.second);
-    }
+    },
 }
 // 객체, 등록 데이터
 function saveImf(varImf, reg){
@@ -86,8 +83,7 @@ function saveImf(varImf, reg){
     varImf.memo = reg[7].value;
 
 }
-// 선택된 리스트의 정보가 들어있는 배열에서 정보 저장
-// 정보 출력 
+
 
 //cWrite select
 //cSelects
@@ -103,7 +99,23 @@ function optionCreate(index,n){
         cSelects[index].append(option);       
     }
 }
+// 오전 오후 골라내기
+let root = -1;
+setInterval(() => {
+    if(date.getHours() <12 && root !== 0){
+      if(root ==1){
+         location.reload();
+      }
+        nowTime[1].style.color = "white";
+        root=0;
+    }else if(date.getHours() >12 && root !== 1){
+        nowTime[2].style.color = "white";
+        cSelects[0].querySelectorAll("option")[2].remove();
+        List[1].remove();
+        root=1;
 
+    }    
+},1000);
 
 function spaceImf(varImf,n){
    let space =document.createElement("li");
@@ -113,9 +125,24 @@ function spaceImf(varImf,n){
 
 //값 등록
 cInfoSubmit.addEventListener("submit",write);
+
+//값 제거 
 cInfoRemove.onclick = function(){
+
+    let n=0;
+
+    if(category == "오늘"){
+        n=0;
+   }else if(category =="오전"){
+        n=1;
+   }else{
+        n=2;
+   }
+    idx[n]--;
     correctionData.remove();
     wInitialization();
+    idxCheck=-1;
+    listCheck=-1;
     cInfoRemove.classList.add("hidden");
     cInfoButton.innerText = "등록";
 }
@@ -128,27 +155,27 @@ function write(event){
     }else{
         varImf.check = "";
     }
-function sectionIndex(index){
-    if(index[1].selectedIndex != 0){
-        n = (index[1].selectedIndex)-1;
-     
-    }else{
-        n= index[1].selectedIndex;
-    }         
-}
+    function sectionIndex(index){
+        if(index[1].selectedIndex != 0){
+            n = (index[1].selectedIndex)-1;
+        
+        }else{
+            n= index[1].selectedIndex;
+        }         
+    }
 // 카테고리 선택된 인덱스 번호로 어느 섹션에 해당되는지 구분
     if(cInfoButton.innerText ==="등록"){ 
                 sectionIndex(this);
                 saveImf(varImf, this);
                 digit(varImf);
                 spaceImf(varImf, n);
-
+                max += 1;
     }else if(cInfoButton.innerText === "수정"){
         saveImf(varImf, this);
         digit(varImf);
-    
       if(category == varImf.category){
             reWrite(varImf);
+            wInitialization();
             return;
         }else{
            if(category == "오늘"){
@@ -163,7 +190,7 @@ function sectionIndex(index){
             sectionIndex(this);
             reWrite(varImf);
             List[n].querySelector("ul").append(correctionData);
-            alert(n);
+           
         }
 
         
@@ -177,8 +204,10 @@ function sectionIndex(index){
 // 각 섹션안에 당겨져있는 li의 갯수 만큼 추가
     
         //  n == list, idx == li
-
-          ListLiChoice(n, idx[n]++);    
+       
+          
+          progress.setAttribute("max",max);
+          listLiChoice(n, idx[n]++);    
            
             
     }
@@ -226,7 +255,7 @@ function reWrite(varImf){
     cInfoRemove.classList.add("hidden");
 }
 
-//write 초기화
+//write 초L기화
 function wInitialization(){
     onCheck.checked = false;
     cSelects[0].options[0].selected = true;
@@ -236,10 +265,11 @@ function wInitialization(){
     cSelects[1].options[0].selected=true;
     cSelects[2].options[0].selected=true;
     cSelects[3].options[0].selected=true;  
+    timeRoot = 0;
 }
 
 
-function ListLiChoice(n ,idx){
+function listLiChoice(n ,idx){
 
     li=List[n].querySelectorAll("ul li");
     
@@ -250,6 +280,7 @@ function ListLiChoice(n ,idx){
        
         if(listCheck != -1 && idxCheck !=-1){
             List[listCheck].querySelectorAll("ul li")[idxCheck].style.backgroundColor = "#E3CAA5";
+            clearInterval(timerId);
         }
 
         correctionData = this;
@@ -316,20 +347,23 @@ function ListLiChoice(n ,idx){
 // //
 
 tButton[0].onclick=function(){
-    alert("b");
-    timerId=setInterval(timer,1000);
-
+  
+   if(tResult != 0 && timeRoot ==0){ 
+        timeRoot =1;
+        timerId=setInterval(timer,1000);
+   }
 }
 tButton[1].onclick=function(){
-    alert("c");
+ 
+    timeRoot =0;
     clearInterval(timerId);
 }
 
 
 function timer(){
- 
     if(tResult <=0 || isNaN(tResult) == true){
         clearInterval(timerId);
+        modal.style.visibility = "visible";
         return 0;
     }    
     tResult--;
@@ -341,5 +375,15 @@ function timer(){
    digit(time);
    tWrite.innerText = time.hour+":"+time.minute+":"+time.second;
 
-   
+}
+
+//modal
+modalBtn[0].onclick = function(){
+    val+=1;
+    progress.setAttribute("value",val);
+    modal.style.visibility = "hidden";
+
+}
+modalBtn[1].onclick = function(){
+    
 }

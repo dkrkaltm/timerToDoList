@@ -2,7 +2,7 @@
 @import "time.css";
 @import "content.css";
 @import "nav.css";
-
+@import "modal.css";
 /* Function */
 .hidden{
     display: none;

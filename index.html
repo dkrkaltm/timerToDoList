@@ -19,13 +19,13 @@
                 <span>00:00:00</span>
             </article>
             <article class="sRight" id="timerFct">
-                <h1 class="hidden" >nextPlan</h1>
+                <h1 class="hidden" >nextPlan</h1> 
                 <dl>
                     <dt>
                         진행도 <span>0%</span>
                     </dt> 
                     <dd>
-                        <progress id="progress" value="" max="100"></progress>
+                        <progress id="progress" value="" max=""></progress>
                     </dd>
                 </dl>
                 <div> 
@@ -64,6 +64,7 @@
                 <h1 class="hidden" >cWrite</h1>
                 <form id="cWriteForm"action="" method="get">
                     <header class="cSelects">
+                       
                         <label for="check">반복</label>
                         <input id="onCheck"type="checkbox" name="check">
                         <select name="category" id="category">
@@ -95,21 +96,21 @@
                       <button type="button" class="hidden" id="cInfoRemove">제거</button>
                       <button id="cInfoSubmit" type="click">등록</button>
                 </div>
-                <audio src="https://www.youtube.com/watch_popup?v=Jh4QFaPmdss &autoplay=1 "   controls >
-                    
-                </audio>
                 </footer>
                 </form>
 
                 
             </article>
         </section>
-        <section class="hidden" id="modal">
-            <div>
-
-            </div>  
-        </section>
+      
     </main>
+    <section id="modal">
+        <div>
+            <h3>Modal</h3>
+            <button type="button">완료</button>
+            <button type="button">부족</button>
+        </div>
+    </section>
 </div>
 </body>
 </html>

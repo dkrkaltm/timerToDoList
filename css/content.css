@@ -7,8 +7,9 @@
     overflow: scroll;
     height:500px;
 }
-.ListBox{
-
+/* save imf */
+#todayList{
+    margin-top:35px;
 }
 .ListImf li{
     margin-top:15px;
@@ -31,7 +32,15 @@
     font-weight: bold;
     color:green;
 }
+/* 선택 */
+.cSelects select{
+    height:27px;
+}
 
+
+
+
+/* footer 입력 */
 .cInfo{
     display: flex;
     flex-direction: column;
@@ -44,20 +53,24 @@
 .cInfo div {
     display: flex;
     font-weight: bolder;
-    align-self:flex-end;
     margin-top:10px;
+    background-color: black;
    
 }
 .cInfo input{
     height:35px;
 }
+.cInfo button{
+    font-size: 2rem;
+    transition: 0.8s;
+}
+.cInfo button:hover{
+    background-color: #AD8B73;
+}
+#cInfoRemove{
+    flex:1;
+}
 #cInfoSubmit{
-    margin-left: 8px;
+    flex:1;
+}
 
-}
-.cSelects select{
-    height:27px;
-}
-#todayList{
-    margin-top:35px;
-}
