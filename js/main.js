@@ -4,6 +4,9 @@
 let tWrite = document.querySelector("#timer span");
 let tButton = document.querySelectorAll("#timerFct button");
 
+//진행도
+let progress = document.querySelector("progress");
+let ing = document.querySelector("#ing");
 //cWriteSelector
 let cSelects = document.querySelectorAll(".cSelects select");
 
@@ -34,8 +37,7 @@ let date = new Date();
 let modal = document.querySelector("#modal");
 let modalBtn = modal.querySelectorAll("button");
 
-//진행도
-let progress = document.querySelector("progress");
+
 
 
 
@@ -58,6 +60,7 @@ let correctionData;
 let timeRoot = 0;
 let max=0;
 let val=0;
+
 //object variable
 const varImf ={
     check:"",
@@ -81,9 +84,7 @@ function saveImf(varImf, reg){
     varImf.title = reg[5].value;
     varImf.target = reg[6].value;
     varImf.memo = reg[7].value;
-
 }
-
 
 //cWrite select
 //cSelects
@@ -99,118 +100,7 @@ function optionCreate(index,n){
         cSelects[index].append(option);       
     }
 }
-// 오전 오후 골라내기
-let root = -1;
-setInterval(() => {
-    if(date.getHours() <12 && root !== 0){
-      if(root ==1){
-         location.reload();
-      }
-        nowTime[1].style.color = "white";
-        root=0;
-    }else if(date.getHours() >12 && root !== 1){
-        nowTime[2].style.color = "white";
-        cSelects[0].querySelectorAll("option")[2].remove();
-        List[1].remove();
-        root=1;
 
-    }    
-},1000);
-
-function spaceImf(varImf,n){
-   let space =document.createElement("li");
-    space.innerHTML = "<div><span>"+varImf.check+"</span> <span>"+varImf.category+"</span> <span>"+varImf.hour+":"+varImf.minute+":"+varImf.second+"</span></div><h3>"+varImf.title+"</h3><p class='hidden'>"+varImf.target+"</p><p class='hidden'>"+varImf.memo+"</p>";
-    List[n].querySelector("ul").append(space);
-}
-
-//값 등록
-cInfoSubmit.addEventListener("submit",write);
-
-//값 제거 
-cInfoRemove.onclick = function(){
-
-    let n=0;
-
-    if(category == "오늘"){
-        n=0;
-   }else if(category =="오전"){
-        n=1;
-   }else{
-        n=2;
-   }
-    idx[n]--;
-    correctionData.remove();
-    wInitialization();
-    idxCheck=-1;
-    listCheck=-1;
-    cInfoRemove.classList.add("hidden");
-    cInfoButton.innerText = "등록";
-}
-function write(event){
-    event.preventDefault();
-    let n;
-
-    if(onCheck.checked ==true){   
-        varImf.check = "반복"; // 반복 여부
-    }else{
-        varImf.check = "";
-    }
-    function sectionIndex(index){
-        if(index[1].selectedIndex != 0){
-            n = (index[1].selectedIndex)-1;
-        
-        }else{
-            n= index[1].selectedIndex;
-        }         
-    }
-// 카테고리 선택된 인덱스 번호로 어느 섹션에 해당되는지 구분
-    if(cInfoButton.innerText ==="등록"){ 
-                sectionIndex(this);
-                saveImf(varImf, this);
-                digit(varImf);
-                spaceImf(varImf, n);
-                max += 1;
-    }else if(cInfoButton.innerText === "수정"){
-        saveImf(varImf, this);
-        digit(varImf);
-      if(category == varImf.category){
-            reWrite(varImf);
-            wInitialization();
-            return;
-        }else{
-           if(category == "오늘"){
-                n=0;
-           }else if(category =="오전"){
-                n=1;
-           }else{
-                n=2;
-           }
-
-            idx[n]--;
-            sectionIndex(this);
-            reWrite(varImf);
-            List[n].querySelector("ul").append(correctionData);
-           
-        }
-
-        
-    }else{
-        alert("오류");
-    }
-//입력란 초기화
-          wInitialization();
-
-// 클로저를 통한 값 등록
-// 각 섹션안에 당겨져있는 li의 갯수 만큼 추가
-    
-        //  n == list, idx == li
-       
-          
-          progress.setAttribute("max",max);
-          listLiChoice(n, idx[n]++);    
-           
-            
-    }
 //cInfoSubmit click
 //c = check
 
@@ -238,6 +128,115 @@ function digit(val){
     }
     
 }
+// 오전 오후 골라내기
+let root = -1;
+setInterval(() => {
+    if(date.getHours() <12 && root !== 0){
+      if(root ==1){
+         location.reload();
+      }
+        nowTime[1].style.color = "white";
+        root=0;
+    }else if(date.getHours() >12 && root !== 1){
+        nowTime[2].style.color = "white";
+        cSelects[0].querySelectorAll("option")[2].remove();
+        List[1].remove();
+        root=1;
+
+    }    
+},1000);
+
+
+
+const sectionIndex = function (index){
+    if(index[1].selectedIndex != 0){
+        return (index[1].selectedIndex)-1;
+    }else{
+        return index[1].selectedIndex;
+    }         
+}
+
+//값 등록
+cInfoSubmit.addEventListener("submit",write);
+
+
+function spaceImf(varImf,n){
+   let space =document.createElement("li");
+    space.innerHTML = "<div><span>"+varImf.check+"</span> <span>"+varImf.category+"</span> <span>"+varImf.hour+":"+varImf.minute+":"+varImf.second+"</span></div><h3>"+varImf.title+"</h3><p class='hidden'>"+varImf.target+"</p><p class='hidden'>"+varImf.memo+"</p>";
+    List[n].querySelector("ul").append(space);
+}
+
+let stopTimer = ()=> {
+    tWrite.innerText = "00:00:00";
+    clearInterval(timerId)
+};
+function write(event){
+    event.preventDefault();
+    let n = sectionIndex(this); // section 번호
+    console.log(cInfoRemove.innerText);
+    if(onCheck.checked ==true){   
+        varImf.check = "반복"; // 반복 여부
+    }else{
+        varImf.check = "";
+    }
+    saveImf(varImf, this);
+    digit(varImf);
+// 카테고리 선택된 인덱스 번호로 어느 섹션에 해당되는지 구분
+    if(cInfoButton.innerText ==="등록"){ 
+                spaceImf(varImf, n);
+                max += 1;
+    }else if(cInfoButton.innerText === "수정"){
+        stopTimer();      
+      if(category == varImf.category){
+            reWrite(varImf);
+            wInitialization();
+            return;
+        }else{ 
+            console.log(List);
+            sectionIndex(this);
+            reWrite(varImf);
+            List[n].querySelector("ul").append(correctionData);
+        }    
+    }else{
+        alert("오류");
+    }
+//입력란 초기화
+          wInitialization();
+
+// 클로저를 통한 값 등록
+// 각 섹션안에 당겨져있는 li의 갯수 만큼 추가
+    
+        //  n == list, idx == li      
+          progress.setAttribute("max",max);
+          listLiChoice(n, idx[n]++);    
+           
+            
+    }
+
+
+//값 제거 
+cInfoRemove.onclick = function(){
+    clearInterval(timerId);
+    tWrite.innerText = "00:00:00";
+    let n=0;
+    if(category == "오늘"){
+        n=0;
+   }else if(category =="오전"){
+        n=1;
+   }else{
+        n=2;
+   }
+    idx[n]--;
+    correctionData.remove();
+    wInitialization();
+    idxCheck=-1;
+    listCheck=-1;
+    cInfoRemove.classList.add("hidden");
+    cInfoButton.innerText = "등록";
+}
+
+
+
 //write 값 변경
 function reWrite(varImf){
     liSpan[0].innerText = varImf.check;
@@ -275,9 +274,10 @@ function listLiChoice(n ,idx){
     
     li[idx].onclick=function(){
         clearInterval(timerId);
-     
+        console.log(this);
+            
     if(listCheck !== n || idx !== idxCheck){
-       
+        
         if(listCheck != -1 && idxCheck !=-1){
             List[listCheck].querySelectorAll("ul li")[idxCheck].style.backgroundColor = "#E3CAA5";
             clearInterval(timerId);
@@ -354,9 +354,9 @@ tButton[0].onclick=function(){
    }
 }
 tButton[1].onclick=function(){
- 
     timeRoot =0;
-    clearInterval(timerId);
+    stopTimer();
+    
 }
 
 
@@ -364,6 +364,7 @@ function timer(){
     if(tResult <=0 || isNaN(tResult) == true){
         clearInterval(timerId);
         modal.style.visibility = "visible";
+        wInitialization();
         return 0;
     }    
     tResult--;
@@ -379,10 +380,11 @@ function timer(){
 
 //modal
 modalBtn[0].onclick = function(){
-    val+=1;
-    progress.setAttribute("value",val);
     modal.style.visibility = "hidden";
-
+    val+=1;
+    ing.innerText = (val/max * 100)+"%";
+    progress.setAttribute("value",val);
+    correctionData.remove();
 }
 modalBtn[1].onclick = function(){
     
